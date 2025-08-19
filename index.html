@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact Card</title>
+
+  <!-- Material Symbols (single include for all icons) -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+
+  <style>
+    :root {
+      --bg: #5b6770;
+      --card-bg: #fff;
+      --text: #333;
+      --muted: #555;
+      --accent: #d00024;
+      --accent-hover: #a0001b;
+      --link: #0b72ff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans CJK TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background-color: var(--bg);
+      margin: 0;
+      padding: 16px;
+    }
+    .wrap {
+      width: 100%;
+      max-width: 520px;
+      position: relative; /* For positioning status over the card */
+    }
+    .card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,.2);
+      padding: 45px;
+      width: 100%;
+      text-align: center;
+    }
+
+    /* Single toggle button (bigger) */
+    .lang-toggle {
+      position: absolute;
+      top: -15px;
+      right: -15px;
+    }
+    .lang-btn {
+      border: none;
+      background: var(--accent);
+      color: #fff;
+      width: 52px;
+      height: 52px;
+      font-size: 16px;
+      font-weight: 800;
+      border-radius: 999px;
+      cursor: pointer;
+      box-shadow: 0 2px 10px rgba(0,0,0,.3);
+    }
+    .lang-btn.active {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin: 12px auto 16px;
+      display: none;
+    }
+    .card h1 {
+      font-size: 26px;
+      margin: 0 0 8px;
+      color: var(--text);
+      word-break: break-word;
+    }
+    .subtitle {
+      color: var(--muted);
+      margin: 0 0 12px;
+      font-size: 15px;
+    }
+
+    .info-table {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      text-align: left;
+      margin-top: 8px;
+    }
+    .info-row {
+      display: grid;
+      grid-template-columns: 28px 1fr;
+      gap: 10px;
+      align-items: start;
+    }
+
+    /* Proper Material Symbols rendering */
+    .material-symbols-outlined {
+      font-family: 'Material Symbols Outlined';
+      font-weight: normal;
+      font-style: normal;
+      font-size: 22px;             /* icon size */
+      line-height: 1;
+      display: inline-block;
+      letter-spacing: normal;
+      text-transform: none;
+      white-space: nowrap;
+      word-wrap: normal;
+      direction: ltr;
+      -webkit-font-feature-settings: 'liga';
+      -webkit-font-smoothing: antialiased;
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      color: var(--accent);
+      vertical-align: middle;
+    }
+
+    .value { color: var(--muted); word-break: break-word; }
+    .value a { color: var(--link); text-decoration: none; }
+    .value a:hover { text-decoration: underline; }
+
+    .btns {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 22px;
+    }
+    .add-contact-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 18px;
+      background-color: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      text-decoration: none;
+      transition: background-color .2s;
+    }
+    .add-contact-btn:hover { background-color: var(--accent-hover); }
+    .add-contact-btn .material-symbols-outlined { color: #fff; font-size: 22px; }
+
+    /* Status visually inside the card */
+    #status {
+      position: absolute;
+      /* Place within the card area (top overlay, centered) */
+      top: 14px;
+      left: 0;
+      right: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 0 16px;
+      text-align: center;
+      pointer-events: none; /* avoid blocking interactions */
+      min-height: 22px;
+    }
+    /* Loading state: dark grey text and spinner */
+    #status.loading { color: #444; }
+    /* Error state (e.g., "Oops") */
+    #status.error { color: var(--accent); }
+
+    /* Spinner in dark grey, shown only while loading */
+    .spinner {
+      display: none;
+      width: 16px;
+      height: 16px;
+      border: 2px solid #666;      /* dark grey ring */
+      border-top-color: transparent;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    #status.loading .spinner { display: inline-block; }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 480px) {
+      body { min-height: 0; height: auto; }
+      .info-row { grid-template-columns: 28px 1fr; }
+      .lang-toggle { top: -12px; right: -10px; }
+      #status { top: 10px; padding: 0 50px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="lang-toggle" aria-label="Language switch">
+      <button id="langBtn" type="button" class="lang-btn" title="Switch language">中</button>
+    </div>
+    <div id="contact-card" class="card"></div>
+    <p id="status" class="" aria-live="polite" aria-atomic="false"></p>
+  </div>
+
+  <script>
+    // --- Utilities ----------------------------------------------------------
+
+    function unfoldVCF(text) {
+      const raw = text.replace(/\r\n/g, "\n").split("\n");
+      const out = [];
+      for (const line of raw) {
+        if (!line) { out.push(""); continue; }
+        if (/^[ \t]/.test(line) && out.length) {
+          out[out.length - 1] += line.slice(1);
+        } else {
+          out.push(line);
+        }
+      }
+      return out;
+    }
+
+    function unescapeVCard(value = "") {
+      return value
+        .replace(/\\n/gi, "\n")
+        .replace(/\\\\/g, "\\")
+        .replace(/\\,/g, ",")
+        .replace(/\\;/g, ";");
+    }
+
+    function parseParams(nameAndParams) {
+      const parts = nameAndParams.split(";");
+      const name = parts.shift().toUpperCase();
+      const params = parts.map(p => p.trim());
+      return { name, params };
+    }
+
+    function hasType(params, val) {
+      return params.some(p => {
+        const up = p.toUpperCase();
+        return up === val.toUpperCase() ||
+               up === `TYPE=${val.toUpperCase()}` ||
+              (up.startsWith("TYPE=") && up.split("=").pop().split(",").includes(val.toUpperCase()));
+      });
+    }
+
+    // --- vCard parser (vCard 3.0 subset + Apple-friendly) -------------------
+
+    function parseVCF(vcfText) {
+      const lines = unfoldVCF(vcfText);
+      const contact = {
+        fullName: "",
+        firstName: "",
+        lastName: "",
+        nickname: "",
+        title: "",
+        company: "",
+        email: "",
+        workPhone: "",
+        mobilePhone: "",
+        address: "",
+        websites: [],
+        note: "",
+        photo: ""
+      };
+
+      for (const rawLine of lines) {
+        const line = rawLine.trim();
+        if (!line || line === "BEGIN:VCARD" || line === "END:VCARD" || /^VERSION:/i.test(line)) continue;
+
+        const idx = line.indexOf(":");
+        if (idx === -1) continue;
+
+        const { name, params } = parseParams(line.slice(0, idx));
+        const value = unescapeVCard(line.slice(idx + 1));
+
+        switch (name) {
+          case "FN":
+            contact.fullName ||= value;
+            break;
+          case "N": {
+            const [last = "", first = ""] = value.split(";");
+            contact.firstName = first;
+            contact.lastName = last;
+            break;
+          }
+          case "NICKNAME":
+            contact.nickname ||= value;
+            break;
+          case "TITLE":
+            contact.title ||= value;
+            break;
+          case "ORG":
+            contact.company ||= value;
+            break;
+          case "EMAIL":
+            if (!contact.email) contact.email = value;
+            break;
+          case "TEL":
+            if (hasType(params, "CELL")) {
+              contact.mobilePhone ||= value;
+            } else if (hasType(params, "WORK")) {
+              contact.workPhone ||= value;
+            } else if (!contact.workPhone) {
+              contact.workPhone = value;
+            }
+            break;
+          case "ADR": {
+            const parts = value.split(";");
+            const street = parts[2] || "";
+            const city = parts[3] || "";
+            const region = parts[4] || "";
+            const postal = parts[5] || "";
+            const country = parts[6] || "";
+            const bits = [street, city, region, postal, country].filter(Boolean);
+            if (bits.length && !contact.address) contact.address = bits.join(", ");
+            break;
+          }
+          case "URL":
+            contact.websites.push(value);
+            break;
+          case "NOTE":
+            contact.note = value;
+            break;
+          default:
+            if (name.startsWith("PHOTO")) {
+              contact.photo = value.startsWith("data:")
+                ? value
+                : `data:image/jpeg;base64,${value}`;
+            }
+            break;
+        }
+      }
+
+      if (!contact.fullName) {
+        contact.fullName = [contact.firstName, contact.lastName].filter(Boolean).join(" ").trim();
+      }
+
+      return contact;
+    }
+
+    // --- UI rendering -------------------------------------------------------
+
+    const i18n = {
+      en: {
+        addContact: "Add Contact",
+        loading: "Loading...",
+        missing: name => `Whoops, no contact name provided! Try a URL like /#${name} to meet our team!`,
+        notFound: who => `Oops, looks like we don’t have a "${who}" on our team!`,
+        toggleLabel: "中"
+      },
+      zh: {
+        addContact: "加入聯絡人",
+        loading: "載入中…",
+        missing: name => `未提供聯絡人代號。請嘗試網址如：/#${name}`,
+        notFound: who => `找不到「${who}」的聯絡人。`,
+        toggleLabel: "EN"
+      }
+    };
+
+    let currentLang = localStorage.getItem("kool-lang") || "en";
+    let contactName = "";
+    let contactEN = null;
+    let contactZH = null;
+    let zhExists = false;
+    let enExists = false;
+
+    function updateToggleLabel() {
+      const btn = document.getElementById("langBtn");
+      btn.textContent = i18n[currentLang].toggleLabel;
+      btn.classList.toggle("active", currentLang === "zh");
+      btn.setAttribute("aria-label", currentLang === "zh" ? "Switch to English" : "切換至中文");
+      document.documentElement.lang = currentLang === "zh" ? "zh-Hant" : "en";
+    }
+
+    function setLang(lang) {
+      currentLang = lang;
+      localStorage.setItem("kool-lang", lang);
+      updateToggleLabel();
+      if (contactEN || contactZH) render();
+    }
+
+    function row(icon, valueHTML) {
+      return `
+        <div class="info-row">
+          <span class="material-symbols-outlined">${icon}</span>
+          <div class="value">${valueHTML}</div>
+        </div>`;
+    }
+
+    // --- UI render ---------------------------------------------------------
+
+    function render() {
+      const t = i18n[currentLang];
+      const card = document.getElementById("contact-card");
+      const status = document.getElementById("status");
+
+      const c = currentLang === "zh" ? (contactZH || contactEN) : (contactEN || contactZH);
+      if (!c) { status.innerHTML = ""; card.innerHTML = ""; return; }
+
+      status.innerHTML = "";
+      const photoHTML = c.photo ? `<img class="avatar" src="${c.photo}" alt="${c.fullName}" onload="this.style.display='block'">` : "";
+
+      const websites = (c.websites || []).map(u => {
+        const clean = u.replace(/^https?:\/\//i, "");
+        return `<div><a href="${u}" target="_blank" rel="noopener">${clean}</a></div>`;
+      }).join("");
+
+      const downloadHref = currentLang === "zh" && zhExists
+        ? `./contacts/${contactName}-zh.vcf`
+        : `./contacts/${contactName}-en.vcf`;
+
+      card.innerHTML = `
+        ${photoHTML}
+        <h1>${c.fullName || "--"}</h1>
+        ${c.nickname ? `<p class="subtitle">${c.nickname}</p>` : ""}
+        <div class="info-table">
+          ${c.title ? row("badge", c.title) : ""}
+          ${c.company ? row("domain", c.company) : ""}
+          ${c.email ? row("mail", `<a href="mailto:${c.email}">${c.email}</a>`) : ""}
+          ${c.workPhone ? row("call", `<a href="tel:${c.workPhone}">${c.workPhone}</a>`) : ""}
+          ${c.mobilePhone ? row("mobile_2", `<a href="tel:${c.mobilePhone}">${c.mobilePhone}</a>`) : ""}
+          ${c.address ? row("location_on", c.address) : ""}
+          ${websites ? row("captive_portal", websites) : ""}
+          ${c.note ? row("chat", c.note.replace(/\n/g, "<br>")) : ""}
+        </div>
+        <div class="btns">
+          <a class="add-contact-btn" href="${downloadHref}" download>
+            <span class="material-symbols-outlined">person_add</span>
+            ${t.addContact}
+          </a>
+        </div>
+      `;
+    }
+
+    function showStatus(messageOrKey) {
+      const status = document.getElementById("status");
+      // Clear if no message
+      if (!messageOrKey) {
+        status.innerHTML = "";
+        status.className = "";
+        return;
+      }
+      const text = i18n[currentLang][messageOrKey] || messageOrKey;
+      const isLoading = /載入|Loading/.test(text);
+      status.className = isLoading ? "loading" : "error";
+      // Only include spinner markup when loading
+      status.innerHTML = isLoading
+        ? `<span class="spinner" aria-hidden="true"></span><span>${text}</span>`
+        : text;
+    }
+
+    function getContactName() {
+      return window.location.hash.replace(/^#/, "");
+    }
+
+    async function fetchIfExists(url) {
+      const res = await fetch(url, { cache: "no-store" });
+      if (!res.ok) throw new Error("not-found");
+      return res.text();
+    }
+
+    async function loadContact() {
+      const defaultDemo = "koolers";
+      contactName = getContactName() || "";
+      if (!contactName) {
+        showStatus(currentLang === "zh" ? i18n.zh.missing(defaultDemo) : i18n.en.missing(defaultDemo));
+        document.getElementById("contact-card").innerHTML = "";
+        return;
+      }
+
+      // show loading state
+      showStatus(currentLang === "zh" ? i18n.zh.loading : i18n.en.loading);
+
+      contactEN = contactZH = null;
+      enExists = zhExists = false;
+
+      const enURL = `./contacts/${contactName}-en.vcf`;
+      const zhURL = `./contacts/${contactName}-zh.vcf`;
+
+      await Promise.all([
+        (async () => {
+          try {
+            const txt = await fetchIfExists(enURL);
+            enExists = true;
+            contactEN = parseVCF(txt);
+          } catch (_) { enExists = false; }
+        })(),
+        (async () => {
+          try {
+            const txt = await fetchIfExists(zhURL);
+            zhExists = true;
+            contactZH = parseVCF(txt);
+          } catch (_) { zhExists = false; }
+        })()
+      ]);
+
+      if (!enExists && !zhExists) {
+        showStatus(currentLang === "zh" ? i18n.zh.notFound(contactName) : i18n.en.notFound(contactName));
+        document.getElementById("contact-card").innerHTML = "";
+        return;
+      }
+
+      // clear loading state and render
+      showStatus("");
+      render();
+    }
+
+    // Events
+    window.addEventListener("load", () => {
+      document.getElementById("langBtn").addEventListener("click", () => {
+        setLang(currentLang === "zh" ? "en" : "zh");
+      });
+      updateToggleLabel();
+      setLang(localStorage.getItem("kool-lang") || "en");
+      loadContact();
+    });
+    window.addEventListener("hashchange", loadContact);
+  </script>
+</body>
+</html>
