@@ -15,7 +15,7 @@ permissions:
 env:
   PRIVATE_REPO: kool-ltd/digital-namecard-private
   PRIVATE_PATH: .
-  PUBLIC_DEST: public/vcards
+  PUBLIC_DEST: ./contacts
 
 jobs:
   build:
