@@ -1,0 +1,60 @@
+name: Build and Deploy Pages
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+  schedule:
+    - cron: "0 3 * * *"  # optional nightly sync
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+env:
+  PRIVATE_REPO: kool-ltd/digital-namecard-private
+  PRIVATE_PATH: .
+  PUBLIC_DEST: public/vcards
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout public repo
+        uses: actions/checkout@v4
+
+      - name: Fetch vCards from private repo (PAT or deploy key)
+        env:
+          GHTOKEN: ${{ secrets.PRIV_REPO_TOKEN }}
+        run: |
+          set -euo pipefail
+          git clone --depth=1 https://$GHTOKEN@github.com/${{ env.PRIVATE_REPO }} private-src
+          mkdir -p "${{ env.PUBLIC_DEST }}"
+          shopt -s nullglob
+          # Copy all .vcf files (preserving filenames) from PRIVATE_DIR
+          cp private-src/${{ env.PRIVATE_DIR }}/*.vcf "${{ env.PUBLIC_DEST }}/"
+          echo "Copied vCards:"
+          ls -1 "${{ env.PUBLIC_DEST }}"
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
