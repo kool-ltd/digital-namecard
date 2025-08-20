@@ -1,0 +1,457 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>vCard Generator (EN + ZH)</title>
+<style>
+  :root {
+    --bg: #0b0f14;
+    --panel: #121922;
+    --muted: #8592a3;
+    --text: #e6eefc;
+    --accent: #4da3ff;
+    --accent2: #76e4f7;
+    --danger: #ff5f7a;
+  }
+  html,body { margin:0; padding:0; background:#0b0f14; color:var(--text); font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji"; }
+  a { color: var(--accent); }
+  .wrap { max-width:1100px; margin:0 auto; padding:20px; }
+  .header { display:flex; flex-wrap:wrap; gap:16px; align-items:center; justify-content:space-between; }
+  .title { font-size:1.25rem; font-weight:700; }
+  .grid { display:grid; grid-template-columns:1fr; gap:16px; }
+  @media (min-width: 900px) {
+    .grid { grid-template-columns: 1fr 1fr; }
+  }
+  .card { background:var(--panel); border:1px solid #1f2a37; border-radius:12px; padding:16px; }
+  .card h3 { margin:0 0 10px; font-size:1rem; color:#cdd9ea; }
+  .row { display:grid; grid-template-columns:1fr; gap:10px; margin-bottom:12px; }
+  @media (min-width:600px){ .row.two { grid-template-columns: 1fr 1fr; } }
+  label { font-size:0.85rem; color:var(--muted); }
+  input[type="text"], input[type="email"], input[type="tel"], textarea {
+    width:100%; box-sizing:border-box; background:#0f1621; border:1px solid #1f2a37; color:var(--text);
+    border-radius:8px; padding:10px; outline:none; font-size:0.95rem;
+  }
+  textarea { min-height:80px; resize:vertical; }
+  .muted { color: var(--muted); font-size:0.9rem; }
+  .btns { display:flex; flex-wrap:wrap; gap:10px; margin-top:10px; }
+  button, .button {
+    background:linear-gradient(90deg, var(--accent), var(--accent2)); color:#00101a; border:none; border-radius:10px; padding:10px 14px; font-weight:700; cursor:pointer;
+  }
+  .btn-secondary {
+    background:#0f1621; color:var(--text); border:1px solid #1f2a37;
+  }
+  .danger { background: var(--danger); color:white; }
+  .preview { white-space:pre-wrap; font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace; background:#0b111a; border:1px dashed #233043; border-radius:10px; padding:10px; color:#cfe6ff; overflow:auto; max-height:300px; }
+  .badge { display:inline-block; font-size:0.75rem; padding:2px 8px; border-radius:999px; border:1px solid #203045; color:#b9c6d9; }
+  .small { font-size:0.8rem; }
+  .footer { color:#8ea3ba; font-size:0.85rem; margin-top:20px; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="header">
+      <div class="title">vCard 3.0 Generator · EN + ZH</div>
+      <div class="badge">Frontend only · No server</div>
+    </div>
+
+    <div class="card">
+      <h3>Global (shared) inputs</h3>
+      <div class="row two">
+        <div>
+          <label>Cell (CELL/VOICE)</label>
+          <input id="cell" type="tel" placeholder="+85293094910" value="+85293094910" />
+        </div>
+        <div>
+          <label>Work Phone (WORK/VOICE)</label>
+          <input id="workPhone" type="tel" placeholder="+85221809795" value="+85221809795" />
+        </div>
+      </div>
+      <div class="row two">
+        <div>
+          <label>Work Email</label>
+          <input id="email" type="email" placeholder="harrywong@kool.com.hk" value="harrywong@kool.com.hk" />
+        </div>
+        <div>
+          <label>Photo (JPEG/PNG; optional)</label>
+          <input id="photo" type="file" accept="image/*" />
+          <div class="muted small">Embedded as base64. Keep small for contact apps.</div>
+        </div>
+      </div>
+      <div class="row">
+        <div>
+          <label>Note (EN)</label>
+          <textarea id="noteEn" placeholder="I have inspired 1,000 global buyers in exhibitions with our kool innovative designed products.">I have inspired 1,000 global buyers in exhibitions with our kool innovative designed products.</textarea>
+        </div>
+      </div>
+      <div class="row">
+        <div>
+          <label>備註 (ZH)</label>
+          <textarea id="noteZh" placeholder="以我們的創新設計產品，我在國際展覽中啟發了1,000名買家。">以我們的創新設計產品，我在國際展覽中啟發了1,000名買家。</textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h3>English vCard</h3>
+        <div class="row two">
+          <div>
+            <label>First Name</label>
+            <input id="enFirst" type="text" placeholder="Harry" value="Harry" oninput="autoFn('en')" />
+          </div>
+          <div>
+            <label>Last Name</label>
+            <input id="enLast" type="text" placeholder="Wong" value="Wong" oninput="autoFn('en')" />
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label>Full Name (FN)</label>
+            <input id="enFN" type="text" placeholder="Harry Wong" value="Harry Wong" />
+          </div>
+        </div>
+        <div class="row two">
+          <div>
+            <label>Phonetic First (X-PHONETIC-FIRST-NAME)</label>
+            <input id="enPhonFirst" type="text" placeholder="廷耀" value="廷耀" />
+          </div>
+          <div>
+            <label>Phonetic Last (X-PHONETIC-LAST-NAME)</label>
+            <input id="enPhonLast" type="text" placeholder="黃" value="黃" />
+          </div>
+        </div>
+        <div class="row two">
+          <div>
+            <label>Nickname</label>
+            <input id="enNick" type="text" placeholder="the inspirator" value="the inspirator" />
+          </div>
+          <div>
+            <label>Title</label>
+            <input id="enTitle" type="text" placeholder="Smarketing & Communications Manager" value="Smarketing & Communications Manager" />
+          </div>
+        </div>
+        <details>
+          <summary class="muted">Fixed fields (editable if needed)</summary>
+          <div class="row">
+            <div>
+              <label>ORG</label>
+              <input id="enOrg" type="text" value="Kool Limited" />
+            </div>
+          </div>
+          <div class="row">
+            <div>
+              <label>ADR (WORK)</label>
+              <input id="enAdr" type="text" value=";;Flat A, 10/F, Goodwill Industrial Bldg., 36 Pak Tin Par St.;Tsuen Wan;NT;;Hong Kong" />
+              <div class="muted small">Format: PO Box;Extended;Street;City;Region;Postal;Country</div>
+            </div>
+          </div>
+          <div class="row two">
+            <div>
+              <label>URL (OBM)</label>
+              <input id="urlObm" type="text" value="https://www.kool.com.hk" />
+            </div>
+            <div>
+              <label>URL (OEM/ODM)</label>
+              <input id="urlOem" type="text" value="https://www.koolb2b.com.hk" />
+            </div>
+          </div>
+        </details>
+        <div class="btns">
+          <button onclick="generateAndDownload('en')">Generate EN .vcf</button>
+          <button class="btn-secondary" onclick="showPreview('en')">Preview EN</button>
+        </div>
+        <div id="preview-en" class="preview" style="display:none;"></div>
+      </div>
+
+      <div class="card">
+        <h3>中文 vCard</h3>
+        <div class="row two">
+          <div>
+            <label>名 (First)</label>
+            <input id="zhFirst" type="text" placeholder="廷耀" value="廷耀" oninput="autoFn('zh')" />
+          </div>
+          <div>
+            <label>姓 (Last)</label>
+            <input id="zhLast" type="text" placeholder="黃" value="黃" oninput="autoFn('zh')" />
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label>顯示名稱 (FN)</label>
+            <input id="zhFN" type="text" placeholder="黃廷耀" value="黃廷耀" />
+          </div>
+        </div>
+        <div class="row two">
+          <div>
+            <label>拼音名 (X-PHONETIC-FIRST-NAME)</label>
+            <input id="zhPhonFirst" type="text" placeholder="Harry" value="Harry" />
+          </div>
+          <div>
+            <label>拼音姓 (X-PHONETIC-LAST-NAME)</label>
+            <input id="zhPhonLast" type="text" placeholder="Wong" value="Wong" />
+          </div>
+        </div>
+        <div class="row two">
+          <div>
+            <label>暱稱</label>
+            <input id="zhNick" type="text" placeholder="啓發者" value="啓發者" />
+          </div>
+          <div>
+            <label>職稱</label>
+            <input id="zhTitle" type="text" placeholder="市場銷售及傳訊經理" value="市場銷售及傳訊經理" />
+          </div>
+        </div>
+        <details>
+          <summary class="muted">固定欄位（需要可修改）</summary>
+          <div class="row">
+            <div>
+              <label>ORG</label>
+              <input id="zhOrg" type="text" value="酷有限公司" />
+            </div>
+          </div>
+          <div class="row">
+            <div>
+              <label>ADR (WORK)</label>
+              <input id="zhAdr" type="text" value=";;香港新界荃灣白田壩街36號信義工業大廈10樓A室;荃灣;新界;;香港" />
+              <div class="muted small">格式： 郵政信箱;延伸地址;街道;城市;省/州;郵遞區號;國家</div>
+            </div>
+          </div>
+          <div class="row two">
+            <div>
+              <label>URL (OBM)</label>
+              <input id="urlObmZh" type="text" value="https://www.kool.com.hk" />
+            </div>
+            <div>
+              <label>URL (OEM/ODM)</label>
+              <input id="urlOemZh" type="text" value="https://www.koolb2b.com.hk" />
+            </div>
+          </div>
+        </details>
+        <div class="btns">
+          <button onclick="generateAndDownload('zh')">產生 ZH .vcf</button>
+          <button class="btn-secondary" onclick="showPreview('zh')">預覽 ZH</button>
+        </div>
+        <div id="preview-zh" class="preview" style="display:none;"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Generate both</h3>
+      <div class="btns">
+        <button onclick="generateAndDownload('en'); generateAndDownload('zh')">Generate EN + ZH</button>
+        <button class="btn-secondary" onclick="clearPreviews()">Clear Previews</button>
+        <button class="danger" onclick="resetAll()">Reset to Defaults</button>
+      </div>
+      <div class="muted small" style="margin-top:10px;">
+        Tip: Commit this file to a GitHub repo as index.html and enable GitHub Pages (Settings → Pages → Deploy from branch).
+      </div>
+    </div>
+
+    <div class="footer">
+      vCard 3.0 with proper escaping and line folding. All data stays in your browser.
+    </div>
+  </div>
+
+<script>
+function escapeText(str) {
+  if (str == null) return "";
+  return String(str)
+    .replace(/\\/g, "\\\\")
+    .replace(/\n/g, "\\n")
+    .replace(/;/g, "\\;")
+    .replace(/,/g, "\\,");
+}
+
+// Fold per RFC: lines MUST be <= 75 octets; practical char limit ~70; continuation begins with a space.
+function foldLine(line, maxLen = 70) {
+  const out = [];
+  let s = line;
+  while (s.length > maxLen) {
+    out.push(s.slice(0, maxLen));
+    s = s.slice(maxLen);
+  }
+  if (s.length) out.push(s);
+  // Insert CRLF + space on continuation lines
+  return out.join("\r\n ");
+}
+
+// Base64 fold (typically 76 chars per line). Keep continuation folding.
+function foldBase64(b64, chunk = 76) {
+  const parts = [];
+  for (let i = 0; i < b64.length; i += chunk) {
+    parts.push(b64.slice(i, i + chunk));
+  }
+  return parts.join("\r\n ");
+}
+
+// Build ADR components: "PO Box;Extended;Street;City;Region;Postal;Country"
+function buildAdr(adrText) {
+  // If user provides whole ADR value already separated by semicolons, just return it
+  return adrText;
+}
+
+function readPhotoAsBase64() {
+  return new Promise((resolve) => {
+    const file = document.getElementById("photo").files?.[0];
+    if (!file) return resolve(null);
+    const reader = new FileReader();
+    reader.onload = () => {
+      const s = String(reader.result || "");
+      const idx = s.indexOf(",");
+      if (idx >= 0) resolve(s.slice(idx + 1));
+      else resolve(null);
+    };
+    reader.onerror = () => resolve(null);
+    reader.readAsDataURL(file);
+  });
+}
+
+function collectShared() {
+  return {
+    cell: document.getElementById("cell").value.trim(),
+    workPhone: document.getElementById("workPhone").value.trim(),
+    email: document.getElementById("email").value.trim(),
+    noteEn: document.getElementById("noteEn").value.trim(),
+    noteZh: document.getElementById("noteZh").value.trim(),
+  };
+}
+
+function collectEn() {
+  return {
+    first: document.getElementById("enFirst").value.trim(),
+    last: document.getElementById("enLast").value.trim(),
+    fn: document.getElementById("enFN").value.trim(),
+    phonFirst: document.getElementById("enPhonFirst").value.trim(),
+    phonLast: document.getElementById("enPhonLast").value.trim(),
+    nick: document.getElementById("enNick").value.trim(),
+    title: document.getElementById("enTitle").value.trim(),
+    org: document.getElementById("enOrg").value.trim(),
+    adr: document.getElementById("enAdr").value.trim(),
+    urlObm: document.getElementById("urlObm").value.trim(),
+    urlOem: document.getElementById("urlOem").value.trim(),
+  };
+}
+
+function collectZh() {
+  return {
+    first: document.getElementById("zhFirst").value.trim(),
+    last: document.getElementById("zhLast").value.trim(),
+    fn: document.getElementById("zhFN").value.trim(),
+    phonFirst: document.getElementById("zhPhonFirst").value.trim(),
+    phonLast: document.getElementById("zhPhonLast").value.trim(),
+    nick: document.getElementById("zhNick").value.trim(),
+    title: document.getElementById("zhTitle").value.trim(),
+    org: document.getElementById("zhOrg").value.trim(),
+    adr: document.getElementById("zhAdr").value.trim(),
+    urlObm: document.getElementById("urlObmZh").value.trim(),
+    urlOem: document.getElementById("urlOemZh").value.trim(),
+  };
+}
+
+function buildVCard(lang, shared, per, photoB64) {
+  // N is "Last;First;Additional;Prefix;Suffix"
+  const n = `${escapeText(per.last)};${escapeText(per.first)};;;`;
+  const fn = escapeText(per.fn || (lang === "en" ? `${per.first} ${per.last}` : `${per.last}${per.first}`));
+  const nick = escapeText(per.nick);
+  const title = escapeText(per.title);
+  const org = escapeText(per.org);
+  const adr = buildAdr(per.adr); // already semicolon separated
+  const email = escapeText(shared.email);
+  const cell = escapeText(shared.cell);
+  const work = escapeText(shared.workPhone);
+  const urlObm = escapeText(per.urlObm);
+  const urlOem = escapeText(per.urlOem);
+  const note = escapeText(lang === "en" ? shared.noteEn : shared.noteZh);
+
+  const lines = [];
+  lines.push("BEGIN:VCARD");
+  lines.push("VERSION:3.0");
+  lines.push(foldLine(`N:${n}`));
+  lines.push(foldLine(`FN:${fn}`));
+  if (per.phonFirst) lines.push(foldLine(`X-PHONETIC-FIRST-NAME:${escapeText(per.phonFirst)}`));
+  if (per.phonLast) lines.push(foldLine(`X-PHONETIC-LAST-NAME:${escapeText(per.phonLast)}`));
+  if (nick) lines.push(foldLine(`NICKNAME:${nick}`));
+  if (org) lines.push(foldLine(`ORG:${org}`));
+  if (title) lines.push(foldLine(`TITLE:${title}`));
+  if (email) lines.push(foldLine(`EMAIL;type=INTERNET;type=WORK:${email}`));
+  if (cell) lines.push(foldLine(`TEL;type=CELL;type=VOICE;type=pref:${cell}`));
+  if (work) lines.push(foldLine(`TEL;type=WORK;type=VOICE:${work}`));
+  if (adr)  lines.push(foldLine(`ADR;type=WORK:${adr}`));
+  if (urlObm) lines.push(foldLine(`URL;type=OBM:${urlObm}`));
+  if (urlOem) lines.push(foldLine(`URL;type=OEMODM:${urlOem}`));
+  if (note) lines.push(foldLine(`NOTE:${note}`));
+  if (photoB64) {
+    // Determine type from content? We assume JPEG by default.
+    const head = "PHOTO;ENCODING=b;TYPE=JPEG:";
+    const folded = foldBase64(photoB64, 76);
+    lines.push(head + folded.split("\r\n ")[0]);
+    const rest = folded.split("\r\n ").slice(1);
+    for (const r of rest) lines.push(" " + r); // continuation already prefixed by space but ensure spec
+  }
+  lines.push("END:VCARD");
+  return lines.join("\r\n") + "\r\n";
+}
+
+function autoFn(lang) {
+  if (lang === "en") {
+    const f = document.getElementById("enFirst").value.trim();
+    const l = document.getElementById("enLast").value.trim();
+    const fn = `${f}${f && l ? " " : ""}${l}`.trim();
+    if (!document.activeElement || document.activeElement.id !== "enFN") {
+      document.getElementById("enFN").value = fn;
+    }
+  } else {
+    const f = document.getElementById("zhFirst").value.trim();
+    const l = document.getElementById("zhLast").value.trim();
+    const fn = `${l}${f}`;
+    if (!document.activeElement || document.activeElement.id !== "zhFN") {
+      document.getElementById("zhFN").value = fn;
+    }
+  }
+}
+
+async function generateAndDownload(lang) {
+  const shared = collectShared();
+  const per = lang === "en" ? collectEn() : collectZh();
+  const photoB64 = await readPhotoAsBase64();
+  const vcf = buildVCard(lang, shared, per, photoB64);
+  const blob = new Blob([vcf], { type: "text/vcard;charset=utf-8" });
+  const a = document.createElement("a");
+  const first = (lang === "en" ? per.first : per.first) || "";
+  const last  = (lang === "en" ? per.last  : per.last) || "";
+  const name = (lang === "en" ? "en" : "zh") + "-" + (first || "first") + "-" + (last || "last") + ".vcf";
+  a.href = URL.createObjectURL(blob);
+  a.download = name.replace(/\s+/g, "_");
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => {
+    URL.revokeObjectURL(a.href);
+    a.remove();
+  }, 200);
+}
+
+async function showPreview(lang) {
+  const shared = collectShared();
+  const per = lang === "en" ? collectEn() : collectZh();
+  // Do not embed photo in preview to keep it short (or include if desired):
+  const vcf = buildVCard(lang, shared, per, null);
+  const el = document.getElementById(lang === "en" ? "preview-en" : "preview-zh");
+  el.textContent = vcf;
+  el.style.display = "block";
+}
+
+function clearPreviews() {
+  document.getElementById("preview-en").style.display = "none";
+  document.getElementById("preview-zh").style.display = "none";
+  document.getElementById("preview-en").textContent = "";
+  document.getElementById("preview-zh").textContent = "";
+}
+
+function resetAll() {
+  if (!confirm("Reset all fields to defaults?")) return;
+  location.reload();
+}
+</script>
+</body>
+</html>
