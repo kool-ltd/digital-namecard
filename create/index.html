@@ -42,7 +42,6 @@
     background:#0f1621; color:var(--text); border:1px solid #1f2a37;
   }
   .danger { background: var(--danger); color:white; }
-  .preview { white-space:pre-wrap; font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace; background:#0b111a; border:1px dashed #233043; border-radius:10px; padding:10px; color:#cfe6ff; overflow:auto; max-height:300px; }
   .badge { display:inline-block; font-size:0.75rem; padding:2px 8px; border-radius:999px; border:1px solid #203045; color:#b9c6d9; }
   .small { font-size:0.8rem; }
   .footer { color:#8ea3ba; font-size:0.85rem; margin-top:20px; }
@@ -60,17 +59,17 @@
       <div class="row two">
         <div>
           <label>Cell (CELL/VOICE)</label>
-          <input id="cell" type="tel" placeholder="+85293094910" value="+85293094910" />
+          <input id="cell" type="tel" placeholder="+85293094910" value="" />
         </div>
         <div>
           <label>Work Phone (WORK/VOICE)</label>
-          <input id="workPhone" type="tel" placeholder="+85221809795" value="+85221809795" />
+          <input id="workPhone" type="tel" placeholder="+85221809795" value="" />
         </div>
       </div>
       <div class="row two">
         <div>
           <label>Work Email</label>
-          <input id="email" type="email" placeholder="harrywong@kool.com.hk" value="harrywong@kool.com.hk" />
+          <input id="email" type="email" placeholder="harrywong@kool.com.hk" value="" />
         </div>
         <div>
           <label>Photo (JPEG/PNG; optional)</label>
@@ -78,161 +77,110 @@
           <div class="muted small">Embedded as base64. Keep small for contact apps.</div>
         </div>
       </div>
-      <div class="row">
+      <div class="row two">
         <div>
-          <label>Note (EN)</label>
-          <textarea id="noteEn" placeholder="I have inspired 1,000 global buyers in exhibitions with our kool innovative designed products.">I have inspired 1,000 global buyers in exhibitions with our kool innovative designed products.</textarea>
+          <label>URL (OBM)</label>
+          <input id="urlObm" type="text" value="https://www.kool.com.hk" />
+        </div>
+        <div>
+          <label>URL (OEM/ODM)</label>
+          <input id="urlOem" type="text" value="https://www.koolb2b.com.hk" />
+          <div>
+            <label><input type="checkbox" id="includeOem" /> Include OEM/ODM URL</label>
+          </div>
         </div>
       </div>
       <div class="row">
         <div>
-          <label>備註 (ZH)</label>
-          <textarea id="noteZh" placeholder="以我們的創新設計產品，我在國際展覽中啟發了1,000名買家。">以我們的創新設計產品，我在國際展覽中啟發了1,000名買家。</textarea>
+          <label>Nickname story (EN)</label>
+          <textarea id="noteEn" placeholder="I have inspired 1,000 global buyers in exhibitions with our kool innovative designed products."></textarea>
+        </div>
+      </div>
+      <div class="row">
+        <div>
+          <label>暱稱故事 (ZH)</label>
+          <textarea id="noteZh" placeholder="以我們的創新設計產品，我在國際展覽中啟發了1,000名買家。"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Names and Positions</h3>
+      <div class="row two">
+        <div>
+          <label>First Name (EN)</label>
+          <input id="enFirst" type="text" placeholder="Harry" value="" />
+        </div>
+        <div>
+          <label>Last Name (EN)</label>
+          <input id="enLast" type="text" placeholder="Wong" value="" />
+        </div>
+      </div>
+      <div class="row two">
+        <div>
+          <label>名 (ZH)</label>
+          <input id="zhFirst" type="text" placeholder="廷耀" value="" />
+        </div>
+        <div>
+          <label>姓 (ZH)</label>
+          <input id="zhLast" type="text" placeholder="黃" value="" />
+        </div>
+      </div>
+      <div class="row two">
+        <div>
+          <label>Nickname (EN)</label>
+          <input id="enNick" type="text" placeholder="the inspirator" value="" />
+        </div>
+        <div>
+          <label>暱稱 (ZH)</label>
+          <input id="zhNick" type="text" placeholder="啓發者" value="" />
+        </div>
+      </div>
+      <div class="row two">
+        <div>
+          <label>Title (EN)</label>
+          <input id="enTitle" type="text" placeholder="Smarketing & Communications Manager" value="" />
+        </div>
+        <div>
+          <label>職稱 (ZH)</label>
+          <input id="zhTitle" type="text" placeholder="市場銷售及傳訊經理" value="" />
         </div>
       </div>
     </div>
 
     <div class="grid">
       <div class="card">
-        <h3>English vCard</h3>
-        <div class="row two">
+        <h3>English Fixed Fields</h3>
+        <div class="row">
           <div>
-            <label>First Name</label>
-            <input id="enFirst" type="text" placeholder="Harry" value="Harry" oninput="autoFn('en')" />
-          </div>
-          <div>
-            <label>Last Name</label>
-            <input id="enLast" type="text" placeholder="Wong" value="Wong" oninput="autoFn('en')" />
+            <label>ORG</label>
+            <input id="enOrg" type="text" value="Kool Limited" />
           </div>
         </div>
         <div class="row">
           <div>
-            <label>Full Name (FN)</label>
-            <input id="enFN" type="text" placeholder="Harry Wong" value="Harry Wong" />
+            <label>ADR (WORK)</label>
+            <input id="enAdr" type="text" value=";;Flat A, 10/F, Goodwill Industrial Bldg., 36 Pak Tin Par St.;Tsuen Wan;NT;;Hong Kong" />
+            <div class="muted small">Format: PO Box;Extended;Street;City;Region;Postal;Country</div>
           </div>
         </div>
-        <div class="row two">
-          <div>
-            <label>Phonetic First (X-PHONETIC-FIRST-NAME)</label>
-            <input id="enPhonFirst" type="text" placeholder="廷耀" value="廷耀" />
-          </div>
-          <div>
-            <label>Phonetic Last (X-PHONETIC-LAST-NAME)</label>
-            <input id="enPhonLast" type="text" placeholder="黃" value="黃" />
-          </div>
-        </div>
-        <div class="row two">
-          <div>
-            <label>Nickname</label>
-            <input id="enNick" type="text" placeholder="the inspirator" value="the inspirator" />
-          </div>
-          <div>
-            <label>Title</label>
-            <input id="enTitle" type="text" placeholder="Smarketing & Communications Manager" value="Smarketing & Communications Manager" />
-          </div>
-        </div>
-        <details>
-          <summary class="muted">Fixed fields (editable if needed)</summary>
-          <div class="row">
-            <div>
-              <label>ORG</label>
-              <input id="enOrg" type="text" value="Kool Limited" />
-            </div>
-          </div>
-          <div class="row">
-            <div>
-              <label>ADR (WORK)</label>
-              <input id="enAdr" type="text" value=";;Flat A, 10/F, Goodwill Industrial Bldg., 36 Pak Tin Par St.;Tsuen Wan;NT;;Hong Kong" />
-              <div class="muted small">Format: PO Box;Extended;Street;City;Region;Postal;Country</div>
-            </div>
-          </div>
-          <div class="row two">
-            <div>
-              <label>URL (OBM)</label>
-              <input id="urlObm" type="text" value="https://www.kool.com.hk" />
-            </div>
-            <div>
-              <label>URL (OEM/ODM)</label>
-              <input id="urlOem" type="text" value="https://www.koolb2b.com.hk" />
-            </div>
-          </div>
-        </details>
-        <div class="btns">
-          <button onclick="generateAndDownload('en')">Generate EN .vcf</button>
-          <button class="btn-secondary" onclick="showPreview('en')">Preview EN</button>
-        </div>
-        <div id="preview-en" class="preview" style="display:none;"></div>
       </div>
 
       <div class="card">
-        <h3>中文 vCard</h3>
-        <div class="row two">
+        <h3>Chinese Fixed Fields</h3>
+        <div class="row">
           <div>
-            <label>名 (First)</label>
-            <input id="zhFirst" type="text" placeholder="廷耀" value="廷耀" oninput="autoFn('zh')" />
-          </div>
-          <div>
-            <label>姓 (Last)</label>
-            <input id="zhLast" type="text" placeholder="黃" value="黃" oninput="autoFn('zh')" />
+            <label>ORG</label>
+            <input id="zhOrg" type="text" value="酷有限公司" />
           </div>
         </div>
         <div class="row">
           <div>
-            <label>顯示名稱 (FN)</label>
-            <input id="zhFN" type="text" placeholder="黃廷耀" value="黃廷耀" />
+            <label>ADR (WORK)</label>
+            <input id="zhAdr" type="text" value=";;香港新界荃灣白田壩街36號信義工業大廈10樓A室;荃灣;新界;;香港" />
+            <div class="muted small">格式： 郵政信箱;延伸地址;街道;城市;省/州;郵遞區號;國家</div>
           </div>
         </div>
-        <div class="row two">
-          <div>
-            <label>拼音名 (X-PHONETIC-FIRST-NAME)</label>
-            <input id="zhPhonFirst" type="text" placeholder="Harry" value="Harry" />
-          </div>
-          <div>
-            <label>拼音姓 (X-PHONETIC-LAST-NAME)</label>
-            <input id="zhPhonLast" type="text" placeholder="Wong" value="Wong" />
-          </div>
-        </div>
-        <div class="row two">
-          <div>
-            <label>暱稱</label>
-            <input id="zhNick" type="text" placeholder="啓發者" value="啓發者" />
-          </div>
-          <div>
-            <label>職稱</label>
-            <input id="zhTitle" type="text" placeholder="市場銷售及傳訊經理" value="市場銷售及傳訊經理" />
-          </div>
-        </div>
-        <details>
-          <summary class="muted">固定欄位（需要可修改）</summary>
-          <div class="row">
-            <div>
-              <label>ORG</label>
-              <input id="zhOrg" type="text" value="酷有限公司" />
-            </div>
-          </div>
-          <div class="row">
-            <div>
-              <label>ADR (WORK)</label>
-              <input id="zhAdr" type="text" value=";;香港新界荃灣白田壩街36號信義工業大廈10樓A室;荃灣;新界;;香港" />
-              <div class="muted small">格式： 郵政信箱;延伸地址;街道;城市;省/州;郵遞區號;國家</div>
-            </div>
-          </div>
-          <div class="row two">
-            <div>
-              <label>URL (OBM)</label>
-              <input id="urlObmZh" type="text" value="https://www.kool.com.hk" />
-            </div>
-            <div>
-              <label>URL (OEM/ODM)</label>
-              <input id="urlOemZh" type="text" value="https://www.koolb2b.com.hk" />
-            </div>
-          </div>
-        </details>
-        <div class="btns">
-          <button onclick="generateAndDownload('zh')">產生 ZH .vcf</button>
-          <button class="btn-secondary" onclick="showPreview('zh')">預覽 ZH</button>
-        </div>
-        <div id="preview-zh" class="preview" style="display:none;"></div>
       </div>
     </div>
 
@@ -240,11 +188,7 @@
       <h3>Generate both</h3>
       <div class="btns">
         <button onclick="generateAndDownload('en'); generateAndDownload('zh')">Generate EN + ZH</button>
-        <button class="btn-secondary" onclick="clearPreviews()">Clear Previews</button>
         <button class="danger" onclick="resetAll()">Reset to Defaults</button>
-      </div>
-      <div class="muted small" style="margin-top:10px;">
-        Tip: Commit this file to a GitHub repo as index.html and enable GitHub Pages (Settings → Pages → Deploy from branch).
       </div>
     </div>
 
@@ -314,6 +258,9 @@ function collectShared() {
     email: document.getElementById("email").value.trim(),
     noteEn: document.getElementById("noteEn").value.trim(),
     noteZh: document.getElementById("noteZh").value.trim(),
+    urlObm: document.getElementById("urlObm").value.trim(),
+    urlOem: document.getElementById("urlOem").value.trim(),
+    includeOem: document.getElementById("includeOem").checked,
   };
 }
 
@@ -321,15 +268,10 @@ function collectEn() {
   return {
     first: document.getElementById("enFirst").value.trim(),
     last: document.getElementById("enLast").value.trim(),
-    fn: document.getElementById("enFN").value.trim(),
-    phonFirst: document.getElementById("enPhonFirst").value.trim(),
-    phonLast: document.getElementById("enPhonLast").value.trim(),
     nick: document.getElementById("enNick").value.trim(),
     title: document.getElementById("enTitle").value.trim(),
     org: document.getElementById("enOrg").value.trim(),
     adr: document.getElementById("enAdr").value.trim(),
-    urlObm: document.getElementById("urlObm").value.trim(),
-    urlOem: document.getElementById("urlOem").value.trim(),
   };
 }
 
@@ -337,22 +279,19 @@ function collectZh() {
   return {
     first: document.getElementById("zhFirst").value.trim(),
     last: document.getElementById("zhLast").value.trim(),
-    fn: document.getElementById("zhFN").value.trim(),
-    phonFirst: document.getElementById("zhPhonFirst").value.trim(),
-    phonLast: document.getElementById("zhPhonLast").value.trim(),
     nick: document.getElementById("zhNick").value.trim(),
     title: document.getElementById("zhTitle").value.trim(),
     org: document.getElementById("zhOrg").value.trim(),
     adr: document.getElementById("zhAdr").value.trim(),
-    urlObm: document.getElementById("urlObmZh").value.trim(),
-    urlOem: document.getElementById("urlOemZh").value.trim(),
   };
 }
 
-function buildVCard(lang, shared, per, photoB64) {
+function buildVCard(lang, shared, per, otherPer, photoB64) {
   // N is "Last;First;Additional;Prefix;Suffix"
   const n = `${escapeText(per.last)};${escapeText(per.first)};;;`;
-  const fn = escapeText(per.fn || (lang === "en" ? `${per.first} ${per.last}` : `${per.last}${per.first}`));
+  const fn = escapeText(lang === "en" ? `${per.first}${per.first && per.last ? " " : ""}${per.last}` : `${per.last}${per.first}`);
+  const phonFirst = escapeText(otherPer.first);
+  const phonLast = escapeText(otherPer.last);
   const nick = escapeText(per.nick);
   const title = escapeText(per.title);
   const org = escapeText(per.org);
@@ -360,8 +299,6 @@ function buildVCard(lang, shared, per, photoB64) {
   const email = escapeText(shared.email);
   const cell = escapeText(shared.cell);
   const work = escapeText(shared.workPhone);
-  const urlObm = escapeText(per.urlObm);
-  const urlOem = escapeText(per.urlOem);
   const note = escapeText(lang === "en" ? shared.noteEn : shared.noteZh);
 
   const lines = [];
@@ -369,8 +306,8 @@ function buildVCard(lang, shared, per, photoB64) {
   lines.push("VERSION:3.0");
   lines.push(foldLine(`N:${n}`));
   lines.push(foldLine(`FN:${fn}`));
-  if (per.phonFirst) lines.push(foldLine(`X-PHONETIC-FIRST-NAME:${escapeText(per.phonFirst)}`));
-  if (per.phonLast) lines.push(foldLine(`X-PHONETIC-LAST-NAME:${escapeText(per.phonLast)}`));
+  if (phonFirst) lines.push(foldLine(`X-PHONETIC-FIRST-NAME:${phonFirst}`));
+  if (phonLast) lines.push(foldLine(`X-PHONETIC-LAST-NAME:${phonLast}`));
   if (nick) lines.push(foldLine(`NICKNAME:${nick}`));
   if (org) lines.push(foldLine(`ORG:${org}`));
   if (title) lines.push(foldLine(`TITLE:${title}`));
@@ -378,8 +315,8 @@ function buildVCard(lang, shared, per, photoB64) {
   if (cell) lines.push(foldLine(`TEL;type=CELL;type=VOICE;type=pref:${cell}`));
   if (work) lines.push(foldLine(`TEL;type=WORK;type=VOICE:${work}`));
   if (adr)  lines.push(foldLine(`ADR;type=WORK:${adr}`));
-  if (urlObm) lines.push(foldLine(`URL;type=OBM:${urlObm}`));
-  if (urlOem) lines.push(foldLine(`URL;type=OEMODM:${urlOem}`));
+  if (shared.urlObm) lines.push(foldLine(`URL;type=OBM:${escapeText(shared.urlObm)}`));
+  if (shared.includeOem && shared.urlOem) lines.push(foldLine(`URL;type=OEMODM:${escapeText(shared.urlOem)}`));
   if (note) lines.push(foldLine(`NOTE:${note}`));
   if (photoB64) {
     // Determine type from content? We assume JPEG by default.
@@ -393,59 +330,29 @@ function buildVCard(lang, shared, per, photoB64) {
   return lines.join("\r\n") + "\r\n";
 }
 
-function autoFn(lang) {
-  if (lang === "en") {
-    const f = document.getElementById("enFirst").value.trim();
-    const l = document.getElementById("enLast").value.trim();
-    const fn = `${f}${f && l ? " " : ""}${l}`.trim();
-    if (!document.activeElement || document.activeElement.id !== "enFN") {
-      document.getElementById("enFN").value = fn;
-    }
-  } else {
-    const f = document.getElementById("zhFirst").value.trim();
-    const l = document.getElementById("zhLast").value.trim();
-    const fn = `${l}${f}`;
-    if (!document.activeElement || document.activeElement.id !== "zhFN") {
-      document.getElementById("zhFN").value = fn;
-    }
-  }
-}
-
 async function generateAndDownload(lang) {
   const shared = collectShared();
-  const per = lang === "en" ? collectEn() : collectZh();
+  const enPer = collectEn();
+  const zhPer = collectZh();
+  const per = lang === "en" ? enPer : zhPer;
+  const otherPer = lang === "en" ? zhPer : enPer;
   const photoB64 = await readPhotoAsBase64();
-  const vcf = buildVCard(lang, shared, per, photoB64);
+  const vcf = buildVCard(lang, shared, per, otherPer, photoB64);
   const blob = new Blob([vcf], { type: "text/vcard;charset=utf-8" });
   const a = document.createElement("a");
-  const first = (lang === "en" ? per.first : per.first) || "";
-  const last  = (lang === "en" ? per.last  : per.last) || "";
-  const name = (lang === "en" ? "en" : "zh") + "-" + (first || "first") + "-" + (last || "last") + ".vcf";
+  const enFirst = enPer.first.toLowerCase() || "first";
+  const enLast = enPer.last.toLowerCase() || "last";
+  const baseName = enFirst + enLast;
+  const suffix = (lang === "en" ? "-en" : "-zh");
+  const name = baseName + suffix + ".vcf";
   a.href = URL.createObjectURL(blob);
-  a.download = name.replace(/\s+/g, "_");
+  a.download = name;
   document.body.appendChild(a);
   a.click();
   setTimeout(() => {
     URL.revokeObjectURL(a.href);
     a.remove();
   }, 200);
-}
-
-async function showPreview(lang) {
-  const shared = collectShared();
-  const per = lang === "en" ? collectEn() : collectZh();
-  // Do not embed photo in preview to keep it short (or include if desired):
-  const vcf = buildVCard(lang, shared, per, null);
-  const el = document.getElementById(lang === "en" ? "preview-en" : "preview-zh");
-  el.textContent = vcf;
-  el.style.display = "block";
-}
-
-function clearPreviews() {
-  document.getElementById("preview-en").style.display = "none";
-  document.getElementById("preview-zh").style.display = "none";
-  document.getElementById("preview-en").textContent = "";
-  document.getElementById("preview-zh").textContent = "";
 }
 
 function resetAll() {
