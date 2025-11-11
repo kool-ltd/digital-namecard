@@ -83,11 +83,11 @@
           <input id="urlObm" type="text" value="https://www.kool.com.hk" />
         </div>
         <div>
-          <label>URL (OEM/ODM)</label>
-          <input id="urlOem" type="text" value="https://www.koolb2b.com.hk" />
-          <div>
-            <label><input type="checkbox" id="includeOem" /> Include OEM/ODM URL</label>
-          </div>
+          <label>URL 2 Type (e.g., FB, IG, BUSINESS)</label>
+          <input id="url2Type" type="text" placeholder="FB" />
+          <label style="margin-top:8px; display:block;">URL 2</label>
+          <input id="url2" type="text" placeholder="https://www.koolb2b.com.hk" />
+          <div class="muted small">If URL 2 is filled, it will be included. Leave the type empty to include without a type.</div>
         </div>
       </div>
       <div class="row">
@@ -203,6 +203,14 @@ function escapeText(str) {
     .replace(/,/g, "\\,");
 }
 
+// Turn a user-entered label into a safe TYPE token for vCard 3.0 (letters/digits/-_.), uppercased.
+function toTypeToken(str) {
+  if (!str) return "";
+  const t = String(str).trim();
+  if (!t) return "";
+  return t.replace(/[^A-Za-z0-9._-]/g, "").toUpperCase();
+}
+
 // Fold per RFC: lines MUST be <= 75 octets; practical char limit ~70; continuation begins with a space.
 function foldLine(line, maxLen = 70) {
   const out = [];
@@ -255,8 +263,8 @@ function collectShared() {
     noteEn: document.getElementById("noteEn").value.trim(),
     noteZh: document.getElementById("noteZh").value.trim(),
     urlObm: document.getElementById("urlObm").value.trim(),
-    urlOem: document.getElementById("urlOem").value.trim(),
-    includeOem: document.getElementById("includeOem").checked,
+    url2: document.getElementById("url2").value.trim(),
+    url2Type: document.getElementById("url2Type").value.trim(),
   };
 }
 
@@ -312,7 +320,18 @@ function buildVCard(lang, shared, per, otherPer, photoB64) {
   if (work) lines.push(foldLine(`TEL;type=WORK;type=VOICE:${work}`));
   if (adr)  lines.push(foldLine(`ADR;type=WORK:${adr}`));
   if (shared.urlObm) lines.push(foldLine(`URL;type=OBM:${escapeText(shared.urlObm)}`));
-  if (shared.includeOem && shared.urlOem) lines.push(foldLine(`URL;type=OEMODM:${escapeText(shared.urlOem)}`));
+
+  // Custom URL 2 with user-defined type label
+  if (shared.url2) {
+    const url2Esc = escapeText(shared.url2);
+    const typeToken = toTypeToken(shared.url2Type);
+    if (typeToken) {
+      lines.push(foldLine(`URL;type=${typeToken}:${url2Esc}`));
+    } else {
+      lines.push(foldLine(`URL:${url2Esc}`));
+    }
+  }
+
   if (note) lines.push(foldLine(`NOTE:${note}`));
   if (photoB64) {
     // Determine type from content? We assume JPEG by default.
