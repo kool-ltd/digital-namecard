@@ -44,6 +44,14 @@
       text-align: center;
     }
 
+    .logo {
+      margin: 0 auto 18px;
+      line-height: 0;
+    }
+    .logo img {
+      width: 80px;
+    }
+
     /* Single toggle button (bigger) */
     .lang-toggle {
       position: absolute;
@@ -493,6 +501,9 @@
       const mobileTitle = c.mobilePhone ? countryLabel(c.mobilePhone) : "";
 
       card.innerHTML = `
+        <div class="logo">
+          <img src="./original.webp" alt="Company Logo">
+        </div>
         ${photoHTML}
         <h1>${c.fullName || "--"}</h1>
         ${c.nickname ? `<p class="subtitle">${c.nickname}</p>` : ""}
