@@ -201,6 +201,8 @@
       #status { top: 10px; padding: 0 50px; }
     }
   </style>
+
+  
 </head>
 <body>
   <div class="wrap">
@@ -609,6 +611,36 @@
       loadContact();
     });
     window.addEventListener("hashchange", loadContact);
+  </script>
+
+  <!-- Default Statcounter code for kool contacts -->
+  <script type="text/javascript">
+  var sc_project=13190314; 
+  var sc_invisible=1; 
+  var sc_security="2c8c0ef0"; 
+  </script>
+  <script type="text/javascript"
+  src="https://www.statcounter.com/counter/counter.js" async></script>
+  <noscript><div class="statcounter"><a title="Web Analytics Made Easy - Statcounter" href="https://statcounter.com/" target="_blank"><img class="statcounter" src="https://c.statcounter.com/13190314/0/2c8c0ef0/1/" alt="Web Analytics Made Easy - Statcounter" referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
+  <!-- End of Statcounter Code -->
+  
+  <!-- Kool Contacts – tag visits with the person's name from the URL hash -->
+  <script type="text/javascript">
+  document.addEventListener("DOMContentLoaded", function() {
+    if (window.location.hash) {
+      var person = window.location.hash.substring(1); // removes the #
+      // Remove any query string if someone accidentally adds ?xxx
+      person = person.split('?')[0];
+  
+      // Safety: only send reasonable length strings
+      if (person.length > 0 && person.length <= 50) {
+        var _statcounter = _statcounter || [];
+        _statcounter.push({"tag": person});        // ← this creates a tag called "tag"
+        // You can also use a numbered variable if you prefer:
+        // _statcounter.push({var1: person});
+      }
+    }
+  });
   </script>
 </body>
 </html>
